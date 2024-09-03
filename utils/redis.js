@@ -21,15 +21,12 @@ class RedisClient {
     }
   }
   get = async (key) => {
-    if (!this.isAlive()) return null;
     return await this.getAsync(key);
   };
   set = async (key, value, duration) => {
-    if (!this.isAlive()) return null;
     return await this.client.setex(key, duration, value);
   };
   del = async (key) => {
-    if (!this.isAlive()) return null;
     await this.client.del(key);
   };
 }
