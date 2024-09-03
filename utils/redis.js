@@ -32,7 +32,7 @@ class RedisClient {
 
   async set(key, value, duration) {
     try {
-      return await this.setAsync(key, duration, value);
+      await this.setAsync(key, duration, value);
     } catch (err) {
       return null;
     }
@@ -40,7 +40,7 @@ class RedisClient {
 
   async del(key) {
     try {
-      return await this.delAsync(key);
+      await this.delAsync(key);
     } catch (err) {
       return null;
     }
