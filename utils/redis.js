@@ -10,6 +10,8 @@ class RedisClient {
       console.log(`Redis client faild to connect: ${err}`);
     });
     this.getAsync = promisify(this.client.get).bind(this.client);
+    this.setAsync = promisify(this.client.setex).bind(this.client);
+    this.delAsync = promisify(this.client.del).bind(this.client);
   }
 
   isAlive = () => {
@@ -21,13 +23,25 @@ class RedisClient {
     }
   }
   get = async (key) => {
-    return await this.getAsync(key);
+    try {
+        return await this.getAsync(key);
+    } catch (err) {
+        return null;
+    }
   };
   set = async (key, value, duration) => {
-    return await this.client.setex(key, duration, value);
+    try {
+      return await this.setAsync(key, duration, value);
+    } catch (err) {
+      return null;
+    }
   };
   del = async (key) => {
-    await this.client.del(key);
+    try {
+      return await this.delAsync(key);
+    } catch (err) {
+      return null;
+    }
   };
 }
 
