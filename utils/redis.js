@@ -4,6 +4,7 @@ import redis from 'redis';
 class RedisClient {
   constructor() {
     this.client = redis.createClient();
+
     this.client.on('error', (err) => {
       console.log(`Redis client faild to connect: ${err}`);
     });
@@ -15,10 +16,12 @@ class RedisClient {
   async get(key) {
     return await this.client.get(key);
   }
-  async set(key, value, duration) {
-    return await this.client.setex(key, duration, value);
+  async set (key, value, duration) {
+    return this.client.setex(key, duration, value);
   }
-  del = async (key) => this.client.del(key);
+  async del (key) {
+    return this.client.del(key);
+  }
 }
 
 
