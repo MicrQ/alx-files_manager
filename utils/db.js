@@ -1,34 +1,31 @@
-import mongodb from 'mongodb';
+import { MongoClient } from 'mongodb';
 
 class DBClient {
   constructor() {
     const host = process.env.DB_HOST || 'localhost';
     const port = process.env.DB_PORT || 27017;
     const dbName = process.env.DB_DATABASE || 'file_manager';
-    const url = `mongodb://${host}:${port}/${dbName}`;
+    const url = `mongodb://${host}:${port}`;
 
-    this.db = new mongodb.MongoClient(url, { useUnifiedTopology: true });
-    this.db.connect()
-      .then(() => console.log('Connected to MongoDB'))
-      .catch((err) => console.log(`failed to connect to MongoDB: ${err}`));
+    this.client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+    this.client.connect()
+      .then(() => {
+        console.log(`DB connected to ${url}/${dbName}`);
+        this.db = this.client.db();
+      })
+      .catch((err) => console.error(`DB connection failed: ${err}`));
   }
 
   isAlive() {
-    return this.db && this.db.isConnected();
+    return this.client.topology.isConnected();
   }
 
   async nbUsers() {
-    if (!this.isAlive()) {
-      throw new Error('DB is not alive');
-    }
-    return this.db.db().collection('users').countDocuments();
+    return this.db.collection('users').countDocuments({});
   }
 
   async nbFiles() {
-    if (!this.isAlive()) {
-      throw new Error('DB is not alive');
-    }
-    return this.db.db().collection('files').countDocuments();
+    return this.db.collection('files').countDocuments({});
   }
 }
 

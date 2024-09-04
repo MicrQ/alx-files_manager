@@ -1,5 +1,5 @@
 /**
- * redis.js test
+ * redis.js test || task 0
  */
 // import redisClient from './utils/redis';
 
@@ -15,7 +15,7 @@
 // })();
 
 /**
- * db.js tests
+ * db.js tests || task-1
  */
 
 import dbClient from './utils/db';
