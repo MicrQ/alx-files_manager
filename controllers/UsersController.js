@@ -15,7 +15,7 @@ class UsersController {
     const result = await dbClient.users.insertOne({ email, password: sha1(password) });
 
     return res.status(201).json({
-      id: result.insertedId,
+      id: result.insertedId.toString(),
       email,
     });
   }
