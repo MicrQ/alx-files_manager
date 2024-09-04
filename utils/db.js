@@ -10,7 +10,6 @@ class DBClient {
     this.client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
     this.client.connect()
       .then(() => {
-        console.log(`DB connected to ${url}/${dbName}`);
         this.db = this.client.db();
       })
       .catch((err) => console.error(`DB connection failed: ${err}`));
@@ -21,11 +20,11 @@ class DBClient {
   }
 
   async nbUsers() {
-    return this.db.collection('users').countDocuments({});
+    return await this.db.collection('users').countDocuments({});
   }
 
   async nbFiles() {
-    return this.db.collection('files').countDocuments({});
+    return await this.db.collection('files').countDocuments({});
   }
 }
 
