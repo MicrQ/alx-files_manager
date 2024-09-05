@@ -22,11 +22,11 @@ class DBClient {
   }
 
   async nbUsers() {
-    return await this.users.countDocuments({});
+    return this.users.countDocuments({});
   }
 
   async nbFiles() {
-    return await this.files.countDocuments({});
+    return this.files.countDocuments({});
   }
 }
 
