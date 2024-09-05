@@ -4,7 +4,7 @@ class DBClient {
   constructor() {
     const host = process.env.DB_HOST || 'localhost';
     const port = process.env.DB_PORT || 27017;
-    const dbName = process.env.DB_DATABASE || 'file_manager';
+    const dbName = process.env.DB_DATABASE || 'files_manager';
     const url = `mongodb://${host}:${port}`;
 
     this.client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -22,11 +22,13 @@ class DBClient {
   }
 
   async nbUsers() {
-    return this.users.countDocuments({});
+    const users = await this.users.countDocuments({});
+    return users;
   }
 
   async nbFiles() {
-    return this.files.countDocuments({});
+    const files = await this.files.countDocuments({});
+    return files;
   }
 }
 
