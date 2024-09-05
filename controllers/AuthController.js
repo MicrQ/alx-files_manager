@@ -6,20 +6,24 @@ import redisClient from '../utils/redis';
 class AuthController {
   static async getConnect(req, res) {
     const authHeader = req.headers.authorization;
-    const base64 = authHeader.split(' ')[1];
-    const credentials = Buffer.from(base64, 'base64').toString('ascii');
-    const [email, password] = credentials.split(':');
+    try {
+      const base64 = authHeader.split(' ')[1];
+      const credentials = Buffer.from(base64, 'base64').toString('ascii');
+      const [email, password] = credentials.split(':');
 
-    const user = await dbClient.users.findOne(
-      { email, password: sha1(password) },
-    );
-    if (!user) return res.status(401).json({ error: 'Unauthorized' });
+      const user = await dbClient.users.findOne(
+        { email, password: sha1(password) },
+      );
+      if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
-    const token = uuidv4();
-    const key = `auth_${token}`;
+      const token = uuidv4();
+      const key = `auth_${token}`;
 
-    await redisClient.set(key, user._id.toString(), 60 * 60 * 24);
-    return res.status(200).json({ token });
+      await redisClient.set(key, user._id.toString(), 60 * 60 * 24);
+      return res.status(200).json({ token });
+    } catch (error) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
   }
 
   static async getDisconnect(req, res) {
