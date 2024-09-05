@@ -4,9 +4,13 @@ import { promisify } from 'util';
 class RedisClient {
   constructor() {
     this.client = redis.createClient();
+    this.con = false;
 
     this.client.on('error', (err) => {
       console.log(`Redis client faild to connect: ${err}`);
+    });
+    this.client.on('connect', () => {
+      this.con = true;
     });
     this.getAsync = promisify(this.client.get).bind(this.client);
     this.setAsync = promisify(this.client.setex).bind(this.client);
@@ -14,12 +18,7 @@ class RedisClient {
   }
 
   isAlive() {
-    try {
-      this.client.ping();
-      return true;
-    } catch (err) {
-      return false;
-    }
+    return this.con;
   }
 
   async get(key) {
